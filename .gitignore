@@ -105,3 +105,7 @@ dist
 
 # MacOS file
 .DS_Store
+
+# Python file
+.ipynb_checkpoints
+*.ipynb
