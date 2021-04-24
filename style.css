@@ -31,3 +31,17 @@
     margin: 0 10px;
     flex-direction: column;
 }
+
+body {
+    height: 100vh;
+}
+
+.country {
+    fill: #cccc;
+    stroke: #333;
+    stroke-width: 0.5px;
+}
+
+.country:hover {
+    fill: black;
+}
