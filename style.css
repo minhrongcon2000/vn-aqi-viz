@@ -33,15 +33,14 @@
 }
 
 .province {
-    fill: #ccc;
     stroke: black;
     stroke-width: 0.5;
 }
 
 .province:hover {
-    fill: yellow;
+    stroke-width: 2;
 }
 
-#tooltip {
-    position: absolute;
+#map {
+    background-color: #00f7ff;
 }

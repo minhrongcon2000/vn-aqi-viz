@@ -1,8 +1,8 @@
 const city2codename = {
-    "Đà Nẵng": "da_nang",
-    "Hồ Chí Minh": "hcmc",
+    "Da Nang": "da_nang",
+    "Ho Chi Minh": "hcmc",
     "Gia Lai": "gia_lai",
-    "Hà Nội": "hanoi",
+    "Ha Noi": "hanoi",
 }
 const city2data = {
     "da_nang": [
