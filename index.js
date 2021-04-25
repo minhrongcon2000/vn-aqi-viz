@@ -20,9 +20,15 @@ d3.csv("https://raw.githubusercontent.com/minhrongcon2000/vn-aqi-viz/bar-chart/d
        // with date as x-axis and aqi as bar height
        // Performed by Nguyen Thanh Luan
 
+        const startDate = new Date(2020, 1, 1, 0, 0, 0, 0);
+        const endDate = new Date(2020, 12, 31, 23, 59, 59, 0);
+
+        console.log(startDate.valueOf());
+        console.log(endDate.valueOf());
+
         var arr_data = [];
-        for(var i = 0; i < data.length; i++){
-            arr_data.push([ data[i]["aqi"] , data[i]["date"] ]);
+        for(var i = 0; i < 50; i++){
+                arr_data.push([ data[i]["aqi"] , data[i]["date"] ]);
         }
 
         console.log(arr_data);
@@ -76,7 +82,7 @@ d3.csv("https://raw.githubusercontent.com/minhrongcon2000/vn-aqi-viz/bar-chart/d
                 return barScale(i);
             })
             .attr("y", function(d){
-                return height + padding - yScale(d[0]);
+                return height - padding - yScale(d[0]);
             })
             .attr("width", barScale.bandwidth())
             .attr("height", function(d) {
