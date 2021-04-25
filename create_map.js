@@ -63,55 +63,67 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
                     .append("text")
                     .attr("y", 32)
                     .attr("display", "none");
-      g.selectAll("path")
-       .data(data.features)
-       .enter()
-       .append('path')
-       .attr("class", "province")
-       .attr('d', path)
-       .attr("fill", d => {
-         const name = d.properties.Name.split(" ").slice(0, -1).join(" ");
-         if (city2codename[name]) {
-           const avg_aqi = city2data[city2codename[name]].map(item => item.aqi).reduce((acc, curr) => acc + curr) / city2data[city2codename[name]].length;
-           if (avg_aqi <= 50) return colors.Good;
-           else if ((avg_aqi >= 51) && (avg_aqi <= 100)) return colors.Moderate;
-           else if ((avg_aqi >= 101) && (avg_aqi <= 150)) return colors["Unhealthy for sensitive group"];
-           else if ((avg_aqi >= 151) && (avg_aqi <= 200)) return colors.Unhealthy;
-           else if ((avg_aqi >= 201) && (avg_aqi <= 300)) return colors["Very Unhealthy"];
-           return colors.Hazardous;
-         }
-         return "#ccc";
-       })
-       .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "));
+      d3.csv("./data/aqi.csv", item => ({
+        date: new Date(item.date),
+        province: item.province,
+        aqi: +item.aqi,
+      }))
+        .then(map_data => {
+          g.selectAll("path")
+           .data(data.features)
+           .enter()
+           .append('path')
+           .attr("class", "province")
+           .attr('d', path)
+           .attr("fill", d => {
+             const name = d.properties.Name.split(" ").slice(0, -1).join(" ");
+             const province_data = map_data.filter(item => item.province === name);
+             if (province_data.length > 0) {
+               let recent_data = province_data.filter(item => item.date.getFullYear() === new Date().getFullYear());
+               let recent_aqi = recent_data.map(item => item.aqi).reduce((acc, curr) => acc + curr) / recent_data.length;
+               if (recent_aqi <= 50) return colors.Good;
+               else if ((recent_aqi >= 51) && (recent_aqi <= 100)) return colors.Moderate;
+               else if ((recent_aqi >= 101) && (recent_aqi <= 150)) return colors["Unhealthy for sensitive group"];
+               else if ((recent_aqi >= 151) && (recent_aqi <= 200)) return colors.Unhealthy;
+               else if ((recent_aqi >= 201) && (recent_aqi <= 300)) return colors["Very Unhealthy"];
+               return colors.Hazardous;
+             }
+             return "#ccc";
+          })
+          .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "));
+          
+          g.on("mouseover", e => {
+            const name = e.target.getAttribute("name");
+            city_name.text(name)
+                   .attr("display", undefined)
+                   .attr("x", width - width / 2 + 10);
+            tooltip_box.attr("stroke", "black")
+                       .attr("fill", "#fcffc7");
+            const province_data = map_data.filter(item => item.province === name);
+            if(province_data.length > 0) {
+              let recent_data = province_data.filter(item => item.date.getFullYear() === new Date().getFullYear());
+              let recent_aqi = recent_data.map(item => item.aqi).reduce((acc, curr) => acc + curr) / recent_data.length;
+              aqi.attr("display", undefined)
+                 .attr("x", width - width / 2 + 10)
+                 .text(parseInt(recent_aqi));
+            } else {
+              aqi.attr("display", undefined)
+                 .attr("x", width - width / 2 + 10)
+                 .text("no data");
+            }
+          })
+          .on("mouseleave", e => {
+            const name = e.target.getAttribute("name");
+            if(!name) {
+              city_name.attr("display", "none");
+              tooltip_box.attr("fill", "none")
+                         .attr("stroke", "none");
+              aqi.attr("display", "none");
+            }
+          });
+        });
 
 
-      g.on("mouseover", e => {
-        const name = e.target.getAttribute("name");
-        city_name.text(name)
-               .attr("display", undefined)
-               .attr("x", width - width / 2 + 10);
-        tooltip_box.attr("stroke", "black")
-                   .attr("fill", "#fcffc7");
-        if(city2codename[name]) {
-          const avg_aqi = city2data[city2codename[name]].map(item => item.aqi).reduce((acc, curr) => acc + curr) / city2data[city2codename[name]].length;
-          aqi.attr("display", undefined)
-             .attr("x", width - width / 2 + 10)
-             .text(parseInt(avg_aqi));
-        } else {
-          aqi.attr("display", undefined)
-             .attr("x", width - width / 2 + 10)
-             .text("no data");
-        }
-      })
-      .on("mouseleave", e => {
-        const name = e.target.getAttribute("name");
-        if(!name) {
-          city_name.attr("display", "none");
-          tooltip_box.attr("fill", "none")
-                     .attr("stroke", "none");
-          aqi.attr("display", "none");
-        }
-      });
       d3.select("#map").call(zoom);
       create_legend();
   });
