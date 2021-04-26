@@ -1,7 +1,7 @@
 // define width and height of images
 const width = document.querySelector("#map").getBoundingClientRect().width;
 const height = document.querySelector("#map").getBoundingClientRect().height;
-const colors = {
+const map_colors = {
   Good: "#598f59",
   Moderate: "#e5ff00",
   "Unhealthy for sensitive group": "#eda813",
@@ -81,16 +81,36 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
              if (province_data.length > 0) {
                let recent_data = province_data.filter(item => item.date.getFullYear() === new Date().getFullYear());
                let recent_aqi = recent_data.map(item => item.aqi).reduce((acc, curr) => acc + curr) / recent_data.length;
-               if (recent_aqi <= 50) return colors.Good;
-               else if ((recent_aqi >= 51) && (recent_aqi <= 100)) return colors.Moderate;
-               else if ((recent_aqi >= 101) && (recent_aqi <= 150)) return colors["Unhealthy for sensitive group"];
-               else if ((recent_aqi >= 151) && (recent_aqi <= 200)) return colors.Unhealthy;
-               else if ((recent_aqi >= 201) && (recent_aqi <= 300)) return colors["Very Unhealthy"];
-               return colors.Hazardous;
+               if (recent_aqi <= 50) return map_colors.Good;
+               else if ((recent_aqi >= 51) && (recent_aqi <= 100)) return map_colors.Moderate;
+               else if ((recent_aqi >= 101) && (recent_aqi <= 150)) return map_colors["Unhealthy for sensitive group"];
+               else if ((recent_aqi >= 151) && (recent_aqi <= 200)) return map_colors.Unhealthy;
+               else if ((recent_aqi >= 201) && (recent_aqi <= 300)) return map_colors["Very Unhealthy"];
+               return map_colors.Hazardous;
              }
              return "#ccc";
           })
-          .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "));
+          .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "))
+          .on("click", (e) => {
+            const province_name = e.target.getAttribute("name");
+            const province_data = map_data.filter(item => item.province === province_name);
+            const unique_years = getDistinctYear(province_data);
+            let province_data_year = []
+
+            for (const year of unique_years) {
+              province_data_year.push({
+                date: year,
+                aqi: getAvgAQIByYear(province_data, year)
+              });
+            }
+            console.log(province_data_year.sort((item1, item2) => item1.date - item2.date));
+            if (!localStorage.getItem("draw")) {
+              draw_bar(province_data_year.sort((item1, item2) => item1.date - item2.date));
+              localStorage.setItem("draw", true);
+            } else {
+              update(province_data_year.sort((item1, item2) => item1.date - item2.date));
+            }
+          });
           
           g.on("mouseover", e => {
             const name = e.target.getAttribute("name");
@@ -137,7 +157,7 @@ const create_legend = () => {
     bottom: 0,
   }
   const legendWidth = 250;
-  const legendHeight = Object.keys(colors).length * notationSize + (Object.keys(colors).length + 1) * margin.top;
+  const legendHeight = Object.keys(map_colors).length * notationSize + (Object.keys(map_colors).length + 1) * margin.top;
 
 
   d3.select("#map")
@@ -149,14 +169,14 @@ const create_legend = () => {
     .attr("fill", "#e7ebd1")
     .attr("stroke", "black");
   let i = 0;
-  for (const notation in colors) {
+  for (const notation in map_colors) {
     d3.select("#map")
       .append("rect")
       .attr("width", 10)
       .attr("height", 10)
       .attr("x", margin.left)
       .attr("y", i == 0 ? height - legendHeight + margin.top : height - legendHeight + margin.top + i * (10 + margin.top))
-      .attr("fill", colors[notation])
+      .attr("fill", map_colors[notation])
       .attr("stroke", "black");
     d3.select("#map")
       .append("text")
