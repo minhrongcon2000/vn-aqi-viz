@@ -63,7 +63,7 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
                     .append("text")
                     .attr("y", 32)
                     .attr("display", "none");
-      d3.csv("https://raw.githubusercontent.com/minhrongcon2000/vn-aqi-viz/main/data/aqi.csv", item => ({
+      d3.csv("./data/aqi.csv", item => ({
         date: new Date(item.date),
         province: item.province,
         aqi: +item.aqi,
@@ -103,7 +103,6 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
                 aqi: getAvgAQIByYear(province_data, year)
               });
             }
-            console.log(province_data_year.sort((item1, item2) => item1.date - item2.date));
             if (!localStorage.getItem("draw")) {
               draw_bar(province_data_year.sort((item1, item2) => item1.date - item2.date));
               localStorage.setItem("draw", true);
