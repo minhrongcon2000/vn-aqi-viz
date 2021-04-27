@@ -48,13 +48,11 @@ const construct_bar_selection = (selection, data) => {
 }
 
 const construct_line_selection = (selection, data) => {
-    console.log(data);
-    const threshold = 101;
     const innerWidth = history_width - history_margin.left - history_margin.right;
     const innerHeight = history_height - history_margin.top - history_margin.bottom;
 
     const xScale = d3.scaleLinear()
-                     .domain([d3.min(data, d => d.date) - 0.25, d3.max(data, d => d.date) + 0.25])
+                     .domain([d3.min(data, d => d.date) - 1, d3.max(data, d => d.date) + 1])
                      .range([0, innerWidth]);
         
     const yScale = d3.scaleLinear()
@@ -62,7 +60,8 @@ const construct_line_selection = (selection, data) => {
         .range([innerHeight, 0]);
 
     const xAxis = d3.axisBottom(xScale)
-                    .tickValues(data.map(item => item.date));
+                    .tickValues(data.map(item => item.date))
+                    .tickFormat(d3.format("d"));
     const yAxis = d3.axisLeft(yScale);
 
     const line = d3.line()
@@ -83,8 +82,38 @@ const construct_line_selection = (selection, data) => {
           .merge(points)
             .attr("cx", d => xScale(d.date))
             .attr("cy", d => yScale(d.aqi))
-            .attr("r", 5)
-            .attr("fill", d => d.aqi > threshold ? "black" : "#ccc");
+            .attr("date", d => d.date)
+            .attr("aqi", d => d.aqi)
+            .attr("r", 7)
+            .attr("fill", "red")
+            .on("mouseover", e => {
+                const cx = +e.target.getAttribute("cx");
+                const cy = +e.target.getAttribute("cy");
+                const x = +e.target.getAttribute("date");
+                const y = Math.round(+e.target.getAttribute("aqi"));
+                selection.append("rect")
+                         .attr("id", "tooltip")
+                         .attr("x", cx)
+                         .attr("y", cy)
+                         .attr("width", 100)
+                         .attr("height", 50)
+                         .attr("fill", "#04458f");
+                selection.append("text")
+                         .text(`date: ${x}`)
+                         .attr("x", cx + 10)
+                         .attr("y", cy + 17)
+                         .attr("id", "date");
+                selection.append("text")
+                         .text(`aqi: ${y}`)
+                         .attr("x", cx + 10)
+                         .attr("y", cy + 40)
+                         .attr("id", "aqi");
+            })
+            .on("mouseleave", e => {
+                selection.select("#tooltip").remove();
+                selection.select("#date").remove();
+                selection.select("#aqi").remove();
+            });
     points.exit().remove();
     
 
@@ -99,12 +128,14 @@ const construct_line_selection = (selection, data) => {
              .attr("id", "x-axis")
              .attr("transform", `translate(0, ${innerHeight})`)
              .call(xAxis);
+    // const tooltip = selection.
 }
 
 const draw_bar = (data) => {
     const g = d3.select("#history")
                 .append("g")
                 .attr("transform", `translate(${history_margin.left}, ${history_margin.top})`);
+    // g.append("rect")
     construct_line_selection(g, data);
 }
 

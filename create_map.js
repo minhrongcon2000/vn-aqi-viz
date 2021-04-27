@@ -31,7 +31,7 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
                      .rotate([2, 32])
                      .parallels([11, 20])
                      .scale(1500)
-                     .translate([0, height / 2]);
+                     .translate([100, height / 2 - 100]);
       
       const path = d3.geoPath(projection);
 

@@ -2,6 +2,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    background: black;
+    color: white;
 }
 
 #title-wrapper {
@@ -42,5 +45,14 @@
 }
 
 #map {
-    background-color: #00f7ff;
+    background-color: #a2e0fa;
+}
+
+#date, #aqi {
+    fill: white;
+}
+
+circle:hover {
+    stroke: whitesmoke;
+    stroke-width: 3;
 }
