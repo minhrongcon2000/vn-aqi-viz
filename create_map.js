@@ -79,8 +79,8 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
              const name = d.properties.Name.split(" ").slice(0, -1).join(" ");
              const province_data = map_data.filter(item => item.province === name);
              if (province_data.length > 0) {
-               let recent_data = province_data.filter(item => item.date.getFullYear() === new Date().getFullYear());
-               let recent_aqi = recent_data.map(item => item.aqi).reduce((acc, curr) => acc + curr) / recent_data.length;
+               let recent_data = province_data.sort((item1, item2) => item2 - item1);
+               let recent_aqi = recent_data[0].aqi;
                if (recent_aqi <= 50) return map_colors.Good;
                else if ((recent_aqi >= 51) && (recent_aqi <= 100)) return map_colors.Moderate;
                else if ((recent_aqi >= 101) && (recent_aqi <= 150)) return map_colors["Unhealthy for sensitive group"];
@@ -120,11 +120,12 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
                        .attr("fill", "#fcffc7");
             const province_data = map_data.filter(item => item.province === name);
             if(province_data.length > 0) {
-              let recent_data = province_data.filter(item => item.date.getFullYear() === new Date().getFullYear());
-              let recent_aqi = recent_data.map(item => item.aqi).reduce((acc, curr) => acc + curr) / recent_data.length;
+              let recent_data = province_data.sort((item1, item2) => item2 - item1);
+              let recent_aqi = recent_data[0].aqi;
+              console.log(recent_data);
               aqi.attr("display", undefined)
                  .attr("x", width - width / 2 + 10)
-                 .text(parseInt(recent_aqi));
+                 .text(Math.round(recent_aqi));
             } else {
               aqi.attr("display", undefined)
                  .attr("x", width - width / 2 + 10)
