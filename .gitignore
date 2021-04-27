@@ -108,4 +108,5 @@ dist
 
 # Python file
 .ipynb_checkpoints
-*.ipynb
+#*.ipynb
+.vscode
