@@ -1,9 +1,9 @@
-const history_width = document.querySelector("#history").getBoundingClientRect().width;
-const history_height = document.querySelector("#history").getBoundingClientRect().height;
-const history_margin = {
-    left: 30,
+const world_rank_width = document.querySelector("#rank-world-graph").getBoundingClientRect().width;
+const world_rank_height = document.querySelector("#rank-world-graph").getBoundingClientRect().height;
+const world_rank_margin = {
+    left: 150,
     top: 10,
-    right: 30,
+    right: 150,
     bottom: 30,
 };
 localStorage.clear();

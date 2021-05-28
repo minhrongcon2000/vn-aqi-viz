@@ -7,32 +7,54 @@
     color: white;
 }
 
-#title-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    height: 10vh;
+#main-page {
+    margin: 10vh auto;
+    width: 95vw;
 }
 
-#title {
-    font-size: 2em;
+.bar-graph-panel:nth-child(1) {
+    margin: 10vh 0;
 }
 
-#graph {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-column-gap: 10px;
-    margin: 10px 15px;
+.bar-graph-panel, .map-panel {
     height: 80vh;
+    margin: 15vh 0;
 }
 
-#footer {
+.year-option-wrapper {
+    margin: 0 auto;
+    width: 12rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.year-option {
+    background-color: rgb(196, 196, 224);
+    color: blue;
+    padding: 20;
+    height: 2rem;
+    width: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 10px;
-    flex-direction: column;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    font-weight: 700;
+}
+
+.year-option:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.year-option:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.year-option:hover {
+    background-color: rgba(169, 170, 219, 0.5);
 }
 
 .province {
@@ -46,13 +68,9 @@
 
 #map {
     background-color: #a2e0fa;
+    margin: 2vh 35vw;
 }
 
 #date, #aqi {
     fill: white;
-}
-
-circle:hover {
-    stroke: whitesmoke;
-    stroke-width: 3;
 }

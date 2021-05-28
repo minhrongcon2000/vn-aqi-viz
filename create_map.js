@@ -27,10 +27,10 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
 
       // define map projection
       const projection = d3.geoAlbers()
-                     .center([114, 4.4])
+                     .center([117, 4])
                      .rotate([2, 32])
                      .parallels([11, 20])
-                     .scale(1500)
+                     .scale(1300)
                      .translate([100, height / 2 - 100]);
       
       const path = d3.geoPath(projection);
