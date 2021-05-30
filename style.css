@@ -68,9 +68,54 @@
 
 #map {
     background-color: #a2e0fa;
-    margin: 2vh 35vw;
+    margin: 2vh 30vw;
 }
 
 #date, #aqi {
     fill: white;
+}
+
+.solution-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2vw;
+    grid-row-gap: 2vh;
+    margin: 5vh auto;
+    grid-template-rows: 205px 205px;
+}
+
+.solution-panel {
+    display: flex;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-width: 1px;
+    border-radius: 20px;
+}
+
+.solution-panel:hover {
+    border-color: white;
+    border-width: 2px;
+}
+
+.solution-panel p {
+    margin: auto;
+    font-size: 30px;
+}
+
+.solution-panel img {
+    margin: auto 5%;
+}
+
+#footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
 }

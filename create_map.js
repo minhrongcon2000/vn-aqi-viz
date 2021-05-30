@@ -21,10 +21,6 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
         bottom: 50
       }
 
-      // view box width and height
-      const innerWidth = width - margin.left - margin.right;
-      const innerHeight = height - margin.top - margin.bottom;
-
       // define map projection
       const projection = d3.geoAlbers()
                      .center([117, 4])
@@ -90,26 +86,7 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
              }
              return "#ccc";
           })
-          .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "))
-          .on("click", (e) => {
-            const province_name = e.target.getAttribute("name");
-            const province_data = map_data.filter(item => item.province === province_name);
-            const unique_years = getDistinctYear(province_data);
-            let province_data_year = []
-
-            for (const year of unique_years) {
-              province_data_year.push({
-                date: year,
-                aqi: getAvgAQIByYear(province_data, year)
-              });
-            }
-            if (!localStorage.getItem("draw")) {
-              draw_bar(province_data_year.sort((item1, item2) => item1.date - item2.date));
-              localStorage.setItem("draw", true);
-            } else {
-              update(province_data_year.sort((item1, item2) => item1.date - item2.date));
-            }
-          });
+          .attr('name', d => d.properties.Name.split(" ").slice(0, -1).join(" "));
           
           g.on("mouseover", e => {
             const name = e.target.getAttribute("name");
@@ -122,7 +99,6 @@ d3.json("https://raw.githubusercontent.com/TungTh/tungth.github.io/master/data/v
             if(province_data.length > 0) {
               let recent_data = province_data.sort((item1, item2) => item2 - item1);
               let recent_aqi = recent_data[0].aqi;
-              console.log(recent_data);
               aqi.attr("display", undefined)
                  .attr("x", width - width / 2 + 10)
                  .text(Math.round(recent_aqi));

@@ -11,6 +11,9 @@
 </head>
 <body>
     <div id="main-page">
+        <div id="title" class="bar-graph-panel">
+            <h1>Vietnam's air condition</h1>
+        </div>
         <div id="world-rank" class="bar-graph-panel">
             <h2>How polluted is Vietnam's air in the world?</h2>
             <br>
@@ -61,23 +64,61 @@
         <div class="bar-graph-panel">
             <h2>Why is it the case?</h2>
             <br>
-            <p>The only reason is from the human activity. Below is a line chart for the number of motorcycles sold in Vietnam each year.</p>
-            <p>The number of motorbikes keeps increasing except for the year 2020 due to the outbreak of COVID-19.</p>
+            <p>The only reason is from the human activity. Below is the chart for the amount of CO2 emission from three sources: oil (red), gas (blue), coal (green).</p>
+            <p>Vietnam releases at least 10 million tons of CO2 each year. Not surprisingly, coal emits the most amount of CO2 for it is used to produce electricity and gasoline.</p>
             <br>
             <svg id="human" width="100%" height="80%"></svg>
         </div>
-        <!--<div id="footer">
-            <p>
-                This project is a small project conducted by a group of students 
-                from the International University, so it is not funded by any organizations.
-            </p>
-            <p>
-                Full source for this project is published 
-                <a href="https://github.com/minhrongcon2000/vn-aqi-viz" target="_blank">
-                    here
-                </a>
-            </p>
-        </div>-->
+        <div class="bar-graph-panel">
+            <h2>What are possible solutions?</h2>
+            <br>
+            <p>The only solution is to less depend on fossil fuel products. For individuals, this can be:</p>
+            <div class="solution-wrapper">
+                <div class="solution-panel">
+                    <img src="https://images.vexels.com/media/users/3/128905/isolated/preview/b04ee8fc260d4c6918b67e960ae3b8f5-tour-bus-silhouette-by-vexels.png" alt="" width="200" height="200">
+                    <p>Using public transports.</p>
+                </div>
+                <div class="solution-panel">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Emoji_u2600.svg/1200px-Emoji_u2600.svg.png" alt="" width="150" height="150">
+                    <p>Utilize solar and other renewable energy.</p>
+                </div>
+                <div class="solution-panel">
+                    <img src="https://www.freeiconspng.com/thumbs/fuel-icon/fuel-pump-icon-23.png" alt="" width="150" height="150">
+                    <p>Using environmental-friendly fuels (such as bilogical fuels).</p>
+                </div>
+            </div>
+        </div>
+        <div class="bar-graph-panel">
+            <h2>What are possible solutions?</h2>
+            <br>
+            <p>For government, this can be:</p>
+            <div class="solution-wrapper">
+                <div class="solution-panel">
+                    <img src="https://icons-for-free.com/iconfiles/png/512/svg+lab+microscope+science+icon-1320190754102964758.png" alt="" width="150" height="150">
+                    <p>Research and discover more efficient energy sources.</p>
+                </div>
+                <div class="solution-panel">
+                    <img src="https://images.vexels.com/media/users/3/128905/isolated/preview/b04ee8fc260d4c6918b67e960ae3b8f5-tour-bus-silhouette-by-vexels.png" alt="" width="150" height="150">
+                    <p>Improve transport systems and infrastructures.</p>
+                </div>
+                <div class="solution-panel">
+                    <img src="https://icon-library.com/images/tax-icon-png/tax-icon-png-10.jpg" alt="" width="150" height="150">
+                    <p>Implement environmental taxes.</p>
+                </div>
+            </div>
+            <div id="footer">
+                <p>
+                    This project is a small project conducted by a group of students 
+                    from the International University, so it is not funded by any organizations.
+                </p>
+                <p>
+                    Full source for this project is published 
+                    <a href="https://github.com/minhrongcon2000/vn-aqi-viz" target="_blank">
+                        here
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://d3js.org/d3-path.v2.min.js"></script>
