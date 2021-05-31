@@ -23,9 +23,14 @@
     margin: 10vh 0;
 }
 
-.bar-graph-panel, .map-panel {
+.bar-graph-panel {
     height: 80vh;
     margin: 15vh 0;
+}
+
+.map-panel {
+    height: 80vh;
+    margin: 20vh 0;
 }
 
 .year-option-wrapper {
@@ -125,4 +130,8 @@
     align-items: center;
     justify-content: center;
     font-size: 40px;
+}
+
+rect:hover {
+    opacity: 0.5;
 }

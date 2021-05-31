@@ -1,6 +1,6 @@
-const construct_bar_selection = (selection, data, year) => {
-    const innerWidth = world_rank_width - world_rank_margin.left - world_rank_margin.right;
-    const innerHeight = world_rank_height - world_rank_margin.top - world_rank_margin.bottom;
+const construct_bar_selection = (selection, data, year, width, height, margin) => {
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
     const bar = selection.selectAll("rect")
                          .data(data);
 
@@ -23,6 +23,8 @@ const construct_bar_selection = (selection, data, year) => {
        .merge(bar)
             .attr("x", 0)
             .attr("y", d => yScale(d["Country/Region"]))
+            .attr("yVal", d => d["Country/Region"])
+            .attr("xVal", d => d[year + " AVG"])
             .attr("height", yScale.bandwidth())
             .transition()
             .delay((d, i) => (data.length - i) * 10)
@@ -61,6 +63,14 @@ d3.csv("./data/national_aqi.csv", rowConverter)
           panelSelector: "#main-page > .bar-graph-panel",
           enterHandler: (story, panel) => {
               if(panel === 1) {
+                  const width = document.querySelector("#rank-world-graph").getBoundingClientRect().width;
+                  const height = document.querySelector("#rank-world-graph").getBoundingClientRect().height;
+                  const margin = {
+                      left: 150,
+                      top: 10,
+                      right: 150,
+                      bottom: 30,
+                  }
                   let chosen_data = data.filter(item => item["2020 AVG"] !== NaN);
                   chosen_data = chosen_data.sort((item1, item2) => item2["2020 AVG"] - item1["2020 AVG"]);
                   chosen_data = chosen_data.slice(0, chosen_data.findIndex(item => item["Country/Region"] === "Vietnam") + 1 + 5);
@@ -70,25 +80,98 @@ d3.csv("./data/national_aqi.csv", rowConverter)
                             .append("g")
                             .attr("transform", `translate(${world_rank_margin.left}, ${world_rank_margin.top})`);
                   }
-                  construct_bar_selection(g, chosen_data, "2020");
+                  construct_bar_selection(g, chosen_data, "2020", width, height, margin);
+                  const countryLegend = g.append("text")
+                                  .attr("fill", "white")
+                                  .attr("id", "country");
+
+                  const aqiLegend = g.append("text")
+                                     .attr("fill", "white")
+                                     .attr("id", "aqi");
+                  d3.selectAll("#rank-world-graph > g > rect")
+                    .on("mouseover", (e) => {
+                        const countryName = e.target.getAttribute("yVal");
+                        const aqiVal = e.target.getAttribute("xVal");
+                        countryLegend.text(countryName);
+                        aqiLegend.text(aqiVal);
+
+                        const innerWidth = width - margin.left - margin.right;
+                        const innerHeight = height - margin.top - margin.bottom;
+                        
+                        const countryLegendWidth = document.querySelector("#rank-world-graph > g > #country").getBoundingClientRect().width;
+                        const countryLegendHeight = document.querySelector("#rank-world-graph > g > #country").getBoundingClientRect().height;
+                        const aqiLegendWidth = document.querySelector("#rank-world-graph > g > #aqi").getBoundingClientRect().width;
+                        const aqiLegendHeight = document.querySelector("#rank-world-graph > g > #aqi").getBoundingClientRect().height;
+
+                        countryLegend.attr("x", innerWidth - countryLegendWidth - 10)
+                                     .attr("y", innerHeight - countryLegendHeight - aqiLegendHeight);
+                        aqiLegend.attr("x", innerWidth - aqiLegendWidth - 10)
+                                 .attr("y", innerHeight - aqiLegendHeight);
+                    })
+                    .on("mouseout", e => {
+                        countryLegend.text("");
+                        aqiLegend.text("");
+                    });
                   d3.selectAll("#world > .year-option")
                     .on("click", e => {
                         const year = e.target.innerText;
                         chosen_data = data.filter(item => item[year + " AVG"].toString() !== "NaN");
                         chosen_data = chosen_data.sort((item1, item2) => item2[year + " AVG"] - item1[year + " AVG"]);
-                        chosen_data = chosen_data.slice(0, chosen_data.findIndex(item => item["Country/Region"] === "Vietnam") + 1 + 5);
-                        construct_bar_selection(g, chosen_data, year);
-                        if (year === "2020") {
-                            d3.select("#world-rank > p").text("Vietnam stands at position 21st among the most 100 air-polluted countries in 2020.");
-                        } 
-                        else if (year === "2019") {
-                            d3.select("#world-rank > p").text("Vietnam stands at position 14th among the most 100 air-polluted countries in 2019.");
-                        }
-                        else if (year === "2018") {
-                            d3.select("#world-rank > p").text("Vietnam stands at position 16th among the most 100 air-polluted countries in 2018.");
-                        }
+                        chosen_data = chosen_data.slice(0, chosen_data
+                                                 .findIndex(item => item["Country/Region"] === "Vietnam") + 1 + 5);
+                        construct_bar_selection(g, chosen_data, year, width, height, margin);
+                        d3.selectAll("#rank-world-graph > g > rect")
+                          .on("mouseover", (e) => {
+                              const countryName = e.target.getAttribute("yVal");
+                              const aqiVal = e.target.getAttribute("xVal");
+                              countryLegend.text(countryName);
+                              aqiLegend.text(aqiVal);
+
+                              const innerWidth = width - margin.left - margin.right;
+                              const innerHeight = height - margin.top - margin.bottom;
+                        
+                              const countryLegendWidth = document.querySelector("#rank-world-graph > g > #country").getBoundingClientRect().width;
+                              const countryLegendHeight = document.querySelector("#rank-world-graph > g > #country").getBoundingClientRect().height;
+                              const aqiLegendWidth = document.querySelector("#rank-world-graph > g > #aqi").getBoundingClientRect().width;
+                              const aqiLegendHeight = document.querySelector("#rank-world-graph > g > #aqi").getBoundingClientRect().height;
+
+                              countryLegend.attr("x", innerWidth - countryLegendWidth - 10)
+                                           .attr("y", innerHeight - countryLegendHeight - aqiLegendHeight);
+                              aqiLegend.attr("x", innerWidth - aqiLegendWidth - 10)
+                                       .attr("y", innerHeight - aqiLegendHeight);
+                          })
+                          .on("mouseout", e => {
+                              countryLegend.text("");
+                              aqiLegend.text("");
+                          });
+                          if (year === "2020") {
+                              d3.select("#world-rank > p")
+                                .text("Vietnam stands at " + 
+                                    "position 21st among the most" + 
+                                    " 100 air-polluted countries in 2020.");
+                          } 
+                          else if (year === "2019") {
+                              d3.select("#world-rank > p")
+                                .text("Vietnam stands at" + 
+                                    " position 14th among the most" + 
+                                    " 100 air-polluted countries in 2019.");
+                          }
+                          else if (year === "2018") {
+                              d3.select("#world-rank > p")
+                                .text("Vietnam stands at position" +
+                                    " 16th among the most 100 air-polluted" + 
+                                    " countries in 2018.");
+                          }
                     });
               } else if(panel === 2) {
+                  const width = document.querySelector("#rank-asia-graph").getBoundingClientRect().width;
+                  const height = document.querySelector("#rank-asia-graph").getBoundingClientRect().height;
+                  const margin = {
+                      left: 150,
+                      top: 10,
+                      right: 150,
+                      bottom: 30,
+                  }
                   const asean_countries = ["Brunei", "Cambodia", "East Timor", "Indonesia", "Laos", "Malaysia", "Myanmar", "Philippines", "Singapore", "Thailand", "Vietnam"];
                   chosen_data = data.filter(item => asean_countries.indexOf(item["Country/Region"]) !== -1);
                   chosen_data = chosen_data.filter(item => item["2020 AVG"].toString() !== "NaN");
@@ -100,14 +183,71 @@ d3.csv("./data/national_aqi.csv", rowConverter)
                                   .append("g")
                                   .attr("transform", `translate(${world_rank_margin.left}, ${world_rank_margin.top})`);
                   }
-                  construct_bar_selection(asean_g, chosen_data, "2020");
+                  construct_bar_selection(asean_g, chosen_data, "2020", width, height, margin);
+
+                  const countryLegend = asean_g.append("text")
+                                  .attr("fill", "white")
+                                  .attr("id", "country");
+
+                  const aqiLegend = asean_g.append("text")
+                                     .attr("fill", "white")
+                                     .attr("id", "aqi");
+                  d3.selectAll("#rank-asia-graph > g > rect")
+                    .on("mouseover", (e) => {
+                        const countryName = e.target.getAttribute("yVal");
+                        const aqiVal = e.target.getAttribute("xVal");
+                        countryLegend.text(countryName);
+                        aqiLegend.text(aqiVal);
+
+                        const innerWidth = width - margin.left - margin.right;
+                        const innerHeight = height - margin.top - margin.bottom;
+                        
+                        const countryLegendWidth = document.querySelector("#rank-asia-graph > g > #country").getBoundingClientRect().width;
+                        const countryLegendHeight = document.querySelector("#rank-asia-graph > g > #country").getBoundingClientRect().height;
+                        const aqiLegendWidth = document.querySelector("#rank-asia-graph > g > #aqi").getBoundingClientRect().width;
+                        const aqiLegendHeight = document.querySelector("#rank-asia-graph > g > #aqi").getBoundingClientRect().height;
+
+                        countryLegend.attr("x", innerWidth - countryLegendWidth - 10)
+                                     .attr("y", innerHeight - countryLegendHeight - aqiLegendHeight);
+                        aqiLegend.attr("x", innerWidth - aqiLegendWidth - 10)
+                                 .attr("y", innerHeight - aqiLegendHeight);
+                    })
+                    .on("mouseout", e => {
+                        countryLegend.text("");
+                        aqiLegend.text("");
+                    });
+
                   d3.selectAll("#asean > .year-option")
                     .on("click", e => {
                         const year = e.target.innerText;
                         chosen_data = data.filter(item => asean_countries.indexOf(item["Country/Region"]) !== -1);
                         chosen_data = chosen_data.filter(item => item[year + " AVG"].toString() !== "NaN");
                         chosen_data = chosen_data.sort((item1, item2) => item2[year + " AVG"] - item1[year + " AVG"]);
-                        construct_bar_selection(asean_g, chosen_data, year);
+                        construct_bar_selection(asean_g, chosen_data, year, width, height, margin);
+                        d3.selectAll("#rank-asia-graph > g > rect")
+                    .on("mouseover", (e) => {
+                        const countryName = e.target.getAttribute("yVal");
+                        const aqiVal = e.target.getAttribute("xVal");
+                        countryLegend.text(countryName);
+                        aqiLegend.text(aqiVal);
+
+                        const innerWidth = width - margin.left - margin.right;
+                        const innerHeight = height - margin.top - margin.bottom;
+                        
+                        const countryLegendWidth = document.querySelector("#rank-asia-graph > g > #country").getBoundingClientRect().width;
+                        const countryLegendHeight = document.querySelector("#rank-asia-graph > g > #country").getBoundingClientRect().height;
+                        const aqiLegendWidth = document.querySelector("#rank-asia-graph > g > #aqi").getBoundingClientRect().width;
+                        const aqiLegendHeight = document.querySelector("#rank-asia-graph > g > #aqi").getBoundingClientRect().height;
+
+                        countryLegend.attr("x", innerWidth - countryLegendWidth - 10)
+                                     .attr("y", innerHeight - countryLegendHeight - aqiLegendHeight);
+                        aqiLegend.attr("x", innerWidth - aqiLegendWidth - 10)
+                                 .attr("y", innerHeight - aqiLegendHeight);
+                    })
+                    .on("mouseout", e => {
+                        countryLegend.text("");
+                        aqiLegend.text("");
+                    });
                         if (year === "2020") {
                             d3.select("#asean-rank > p").text("Vietnam stands at position 3rd among ASEAN countries in terms of AQI in 2020.");
                         } 
@@ -123,11 +263,13 @@ d3.csv("./data/national_aqi.csv", rowConverter)
           exitHandler: (story, panel) => {
               if(panel === 1) {
                   d3.selectAll("#rank-world-graph > g > rect").remove();
+                  d3.selectAll("#rank-world-graph > g > text").remove();
                   d3.select("#world-rank > p").text("Vietnam stands at position 21st among the most 100 air-polluted countries in 2020.");
               }
 
               if(panel === 2) {
                   d3.selectAll("#rank-asia-graph > g > rect").remove();
+                  d3.selectAll("#rank-asia-graph > g > text").remove();
                   d3.select("#asean-rank > p").text("Vietnam stands at position 3rd among ASEAN countries in terms of AQI in 2020.");
               }
           },
