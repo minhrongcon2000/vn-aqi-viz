@@ -35,6 +35,7 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
     
     selection.select("path").remove();  
     selection.append("path")
+             .transition()
              .attr("d", line(data))
              .attr("stroke", color)
              .attr("stroke-width", 5)
@@ -70,92 +71,101 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
     }
 }
 
-d3.csv("./data/forest.csv", row => ({ year: +row.year, forest_area: +row.forest_area }))
-  .then(data => {
-      const width = document.querySelector("#forest").getBoundingClientRect().width;
-      const height = document.querySelector("#forest").getBoundingClientRect().height;
-      const margin = {
-        left: 150,
-        top: 10,
-        right: 150,
-        bottom: 30,
-      }
-      const g = d3.select("#forest")
-                  .append("g")
-                  .attr("transform", `translate(${margin.left}, ${margin.top})`);
-      construct_line_selection(g, data, "year", "forest_area", width, height, margin, "red", true, true);
-  });
-
-d3.csv("./data/co2.csv", row => ({ year: +row.year, co2: +row.co2 }))
-  .then(data => {
-      const width = document.querySelector("#co2").getBoundingClientRect().width;
-      const height = document.querySelector("#co2").getBoundingClientRect().height;
-      const margin = {
-        left: 150,
-        top: 10,
-        right: 150,
-        bottom: 30,
-      }
-      const g = d3.select("#co2")
-                  .append("g")
-                  .attr("transform", `translate(${margin.left}, ${margin.top})`);
-      construct_line_selection(g, data, "year", "co2", width, height, margin, "red", true, true);
-  });
-
-// d3.csv("./data/motor.csv", row => ({year: +row.year, num_motor: +row.num_motor}))
-//   .then(data => {
-//     const width = document.querySelector("#human").getBoundingClientRect().width;
-//     const height = document.querySelector("#human").getBoundingClientRect().height;
-//     const margin = {
-//       left: 150,
-//       top: 10,
-//       right: 150,
-//       bottom: 30,
-//     }
-//     const g = d3.select("#human")
-//                 .append("g")
-//                 .attr("transform", `translate(${margin.left}, ${margin.top})`);
-//     construct_line_selection(g, data, "year", "num_motor", width, height, margin, "red");
-//   });
-
-d3.csv("./data/co2_fuel.csv", rows => ({year: +rows.Year, gas: +rows.gas, oil: +rows.oil, coal: +rows.coal}))
-  .then(data => {
-    const width = document.querySelector("#human").getBoundingClientRect().width;
-    const height = document.querySelector("#human").getBoundingClientRect().height;
-    const margin = {
-      left: 150,
-      top: 10,
-      right: 150,
-      bottom: 30,
+new Story({
+  containerSelector: "#main-page",
+  panelSelector: "#main-page > .bar-graph-panel",
+  enterHandler: (story, panel) => {
+    if(panel === 3) {
+      d3.csv("./data/forest.csv", row => ({ year: +row.year, forest_area: +row.forest_area }))
+        .then(data => {
+            const width = document.querySelector("#forest").getBoundingClientRect().width;
+            const height = document.querySelector("#forest").getBoundingClientRect().height;
+            const margin = {
+              left: 150,
+              top: 10,
+              right: 150,
+              bottom: 30,
+            }
+            const g = d3.select("#forest")
+                        .append("g")
+                        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            construct_line_selection(g, data, "year", "forest_area", width, height, margin, "red", true, true);
+        });
     }
-    const clean_data = data.filter(item => (item.oil > 0) & (item.gas > 0) & (item.coal > 0));
-    const oil_g = d3.select("#human")
-                    .append("g")
-                    .attr("id", "oil")
-                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    const gas_g = d3.select("#human")
-                    .append("g")
-                    .attr("id", "gas")
-                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    const coal_g = d3.select("#human")
-                    .append("g")
-                    .attr("id", "coal")
-                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    const oil_data = clean_data.map(item => ({ year: item.year, oil: item.oil }));
-    const gas_data = clean_data.map(item => ({ year: item.year, gas: item.gas }));
-    const coal_data = clean_data.map(item => ({ year: item.year, coal: item.coal }));
 
-    const oil_max = d3.max(oil_data, d => d.oil);
-    const gas_max = d3.max(gas_data, d => d.gas);
-    const coal_max = d3.max(coal_data, d => d.coal);
-    const oil_min = d3.min(oil_data, d => d.oil);
-    const gas_min = d3.min(gas_data, d => d.gas);
-    const coal_min = d3.min(coal_data, d => d.coal);
+    if(panel === 4) {
+      d3.csv("./data/co2.csv", row => ({ year: +row.year, co2: +row.co2 }))
+        .then(data => {
+            const width = document.querySelector("#co2").getBoundingClientRect().width;
+            const height = document.querySelector("#co2").getBoundingClientRect().height;
+            const margin = {
+              left: 150,
+              top: 10,
+              right: 150,
+              bottom: 30,
+            }
+            const g = d3.select("#co2")
+                        .append("g")
+                        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            construct_line_selection(g, data, "year", "co2", width, height, margin, "red", true, true);
+        });
+    }
 
-    const yMax = d3.max([oil_max, gas_max, coal_max]);
-    const yMin = d3.min([oil_min, gas_min, coal_min]);
+    if(panel === 5) {
+      d3.csv("./data/co2_fuel.csv", rows => ({year: +rows.Year, gas: +rows.gas, oil: +rows.oil, coal: +rows.coal}))
+        .then(data => {
+          const width = document.querySelector("#human").getBoundingClientRect().width;
+          const height = document.querySelector("#human").getBoundingClientRect().height;
+          const margin = {
+            left: 150,
+            top: 10,
+            right: 150,
+            bottom: 30,
+          }
+          const clean_data = data.filter(item => (item.oil > 0) & (item.gas > 0) & (item.coal > 0));
+          const oil_g = d3.select("#human")
+                          .append("g")
+                          .attr("id", "oil")
+                          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+          const gas_g = d3.select("#human")
+                          .append("g")
+                          .attr("id", "gas")
+                          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+          const coal_g = d3.select("#human")
+                          .append("g")
+                          .attr("id", "coal")
+                          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+          const oil_data = clean_data.map(item => ({ year: item.year, oil: item.oil }));
+          const gas_data = clean_data.map(item => ({ year: item.year, gas: item.gas }));
+          const coal_data = clean_data.map(item => ({ year: item.year, coal: item.coal }));
+      
+          const oil_max = d3.max(oil_data, d => d.oil);
+          const gas_max = d3.max(gas_data, d => d.gas);
+          const coal_max = d3.max(coal_data, d => d.coal);
+          const oil_min = d3.min(oil_data, d => d.oil);
+          const gas_min = d3.min(gas_data, d => d.gas);
+          const coal_min = d3.min(coal_data, d => d.coal);
+      
+          const yMax = d3.max([oil_max, gas_max, coal_max]);
+          const yMin = d3.min([oil_min, gas_min, coal_min]);
+      
+          construct_line_selection(oil_g, oil_data, "year", "oil", width, height, margin, "red", true, true, undefined, undefined, yMin, yMax);
+          construct_line_selection(gas_g, gas_data, "year", "gas", width, height, margin, "blue", true, true, undefined, undefined, yMin, yMax);
+          construct_line_selection(coal_g, coal_data, "year", "coal", width, height, margin, "green", true, true, undefined, undefined, yMin, yMax);
+        });
+    }
+  },
+  exitHandler: (story, panel) => {
+    if(panel === 3) {
+      d3.select("#forest > g").remove();
+    } else if(panel === 4) {
+      d3.select("#co2 > g").remove();
+    }
+    else if(panel === 5) {
+      d3.selectAll("#human > g").remove();
+    }
+  }    
+})
 
-    construct_line_selection(oil_g, oil_data, "year", "oil", width, height, margin, "red", true, true, undefined, undefined, yMin, yMax);
-    construct_line_selection(gas_g, gas_data, "year", "gas", width, height, margin, "blue", true, true, undefined, undefined, yMin, yMax);
-    construct_line_selection(coal_g, coal_data, "year", "coal", width, height, margin, "green", true, true, undefined, undefined, yMin, yMax);
-  })
+
+
