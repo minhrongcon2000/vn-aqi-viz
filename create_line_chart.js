@@ -36,6 +36,7 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
     selection.select("path").remove();  
     selection.append("path")
              .transition()
+             .delay(100)
              .attr("d", line(data))
              .attr("stroke", color)
              .attr("stroke-width", 5)

@@ -78,7 +78,7 @@ d3.csv("./data/national_aqi.csv", rowConverter)
                   if(g._groups[0][0] === null) {
                       g = d3.select("#rank-world-graph")
                             .append("g")
-                            .attr("transform", `translate(${world_rank_margin.left}, ${world_rank_margin.top})`);
+                            .attr("transform", `translate(${margin.left}, ${margin.top})`);
                   }
                   construct_bar_selection(g, chosen_data, "2020", width, height, margin);
                   const countryLegend = g.append("text")
@@ -181,7 +181,7 @@ d3.csv("./data/national_aqi.csv", rowConverter)
                   if(asean_g._groups[0][0] === null) {
                       asean_g = d3.select("#rank-asia-graph")
                                   .append("g")
-                                  .attr("transform", `translate(${world_rank_margin.left}, ${world_rank_margin.top})`);
+                                  .attr("transform", `translate(${margin.left}, ${margin.top})`);
                   }
                   construct_bar_selection(asean_g, chosen_data, "2020", width, height, margin);
 

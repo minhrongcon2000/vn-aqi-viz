@@ -13,24 +13,21 @@
     height: 100vh;
     overflow-y: scroll;
     position: relative;
+    scroll-snap-type: y mandatory;
 }
 
 #main-page::-webkit-scrollbar {
     background: transparent;
 }
 
-.bar-graph-panel:nth-child(1) {
-    margin: 10vh 0;
-}
-
 .bar-graph-panel {
-    height: 80vh;
-    margin: 15vh 0;
+    height: 100vh;
+    scroll-snap-align: start;
 }
 
 .map-panel {
-    height: 80vh;
-    margin: 20vh 0;
+    height: 100vh;
+    scroll-snap-align: start;
 }
 
 .year-option-wrapper {
