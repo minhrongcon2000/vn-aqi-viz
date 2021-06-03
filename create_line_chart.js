@@ -32,6 +32,7 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
     const line = d3.line()
                    .x(d => xScale(d[x]))
                    .y(d => yScale(d[y]));
+
     
     selection.select("path").remove();  
     selection.append("path")
@@ -52,7 +53,19 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
             .attr(x, d => d[x])
             .attr(y, d => d[y])
             .attr("r", 5)
-            .attr("fill", color);
+            .attr("fill", color)
+            .on('mouseover', function(){
+              d3.select(this)
+                .transition()
+                .duration(150)
+                .attr('r', 10)  
+            })
+            .on('mouseout', function(){
+              d3.select(this)
+                .transition()
+                .duration(150)
+                .attr('r', 5);
+            });
     points.exit().remove();
     
     if(displayXAxis) {
