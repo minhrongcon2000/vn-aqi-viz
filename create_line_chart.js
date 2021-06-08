@@ -65,6 +65,10 @@ const construct_line_selection = (selection, data, x, y, width, height, margin, 
                 .transition()
                 .duration(150)
                 .attr('r', 5);
+            })
+            .append('title')
+            .text(function(d){
+              return 'Year: ' + d[x] + '\n' + d[y];
             });
     points.exit().remove();
     
